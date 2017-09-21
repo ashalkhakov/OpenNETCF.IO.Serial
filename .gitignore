@@ -1,0 +1,38 @@
+# Directories / files to exclude from version control
+bin/
+obj/
+packages/
+# build outputs during release cycle
+/src/output/
+
+# backup files
+.bak
+
+^Resources/Resource.designer.cs
+
+*.cache
+
+# files resulting from building
+*.exe
+*.idb
+*.ipch
+*.lastbuildstate
+*.lib
+*.log
+*.obj
+*.pch
+*.pdb
+*.res
+*.dll
+
+# Visual Studio editor files
+*.aps
+*.sdf
+*.tlog
+*.user
+*.ncb
+*.suo
+
+# Xamarin studio editor files
+*.userprefs
+Resource.Designer.cs
