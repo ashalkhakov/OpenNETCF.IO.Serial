@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>OpenNETCF.IO.Serial.CF</id>
+    <version>1.0.0.0</version>
+    <authors>ashalkhakov</authors>
+    <owners>ashalkhakov</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>OpenNETCF.IO.Serial for CF</description>
+    <releaseNotes>Nugetizing</releaseNotes>
+    <copyright>Copyright 2017</copyright>
+    <tags>GPS Serial</tags>
+  </metadata>
+  <files>
+    <file src="bin\Release\opennetcf.io.serial.*" target="lib\net35-cf\" />
+  </files>  
+</package>
