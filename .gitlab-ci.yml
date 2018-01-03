@@ -1,0 +1,67 @@
+stages:
+  - build
+
+before_script:
+  # switch the console to UTF-8 so the output is displayed nicely in the web GUI
+  - chcp 65001
+  - cls
+  - git describe --tags > temp.txt
+  - SET /p Version=<temp.txt
+  - SET MYNUGET="C:\Program Files (x86)\NuGet\Visual Studio 2015\nuget.exe"
+
+build-android:
+  stage: build
+  only:
+    - master
+  script:
+    - SET MsBuildPath="C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin"
+    - SET MsBuild="C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin\msbuild.exe"
+    - SET SolutionFolder=OpenNETCF.IO.Serial
+    - SET ProjFile=OpenNETCF.IO.Serial.Android.csproj
+    - SET PacketName=OpenNETCF.IO.Serial.Android
+    - SET SlnFile=OpenNETCF.IO.Serial.Net45.sln
+    #- '%MYNUGET% restore %SlnFile%'
+    - 'cd %SolutionFolder%'
+    #- '%MYNUGET% restore packages.config -PackagesDirectory packages'
+    - '%MsBuild% %ProjFile% /t:Build /p:Configuration=Release'
+    - '%MYNUGET% pack %ProjFile% -MSBuildPath %MsBuildPath% -IncludeReferencedProjects -Properties Configuration=Release -Version %Version%'
+    - '%MYNUGET% push -ApiKey %NugetAPIKey% -Source %NugetSource%  -Verbosity detailed %PacketName%.%Version%.nupkg'
+    - 'rm %PacketName%.%Version%.nupkg'
+  tags:
+    - windows
+
+build-net45:
+  stage: build
+  only:
+    - master
+  script:
+    - SET MsBuildPath="C:\Program Files (x86)\MSBuild\14.0\Bin"
+    - SET MsBuild="C:\Program Files (x86)\MSBuild\14.0\Bin\msbuild.exe"
+    - SET SolutionFolder=OpenNETCF.IO.Serial
+    - SET ProjFile=OpenNETCF.IO.Serial.Net45.csproj
+    - SET PacketName=OpenNETCF.IO.Serial.Net45
+    - SET SlnFile=OpenNETCF.IO.Serial.Net45.sln
+    #- '%MYNUGET% restore %SlnFile%'
+    - 'cd %SolutionFolder%'
+    #- '%MYNUGET% restore packages.config -PackagesDirectory packages'
+    - '%MsBuild% %ProjFile% /t:Build /p:Configuration=Release'
+    - '%MYNUGET% pack %ProjFile% -MSBuildPath %MsBuildPath% -IncludeReferencedProjects -Properties Configuration=Release -Version %Version%'
+    - '%MYNUGET% push -ApiKey %NugetAPIKey% -Source %NugetSource%  -Verbosity detailed %PacketName%.%Version%.nupkg'
+    - 'rm %PacketName%.%Version%.nupkg'
+  tags:
+    - windows
+
+build-cf:
+  stage: build
+  only:
+    - master
+  script:
+    - SET ProjFile=OpenNETCF.IO.Serial\OpenNETCF.IO.Serial.csproj
+    - SET PacketName=OpenNETCF.IO.Serial.CF
+    - SET MsBuildCE="C:\WINDOWS\Microsoft.NET\Framework\v3.5\MSBuild.exe"
+    - '%MsBuildCE% %ProjFile% /t:Build /p:Configuration=Release'
+    - '%MYNUGET% pack %ProjFile%.nuspec -Properties Configuration=Release -Version %Version%'
+    - '%MYNUGET% push -ApiKey %NugetAPIKey% -Source %NugetSource% -Verbosity detailed %PacketName%.%Version%.nupkg'
+    - 'rm %PacketName%.%Version%.nupkg'
+  tags:
+    - windows
